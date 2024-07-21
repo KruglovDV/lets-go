@@ -1,11 +1,16 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 )
 
 func main() {
+	addr := flag.String("addr", ":4000", "HTTP network address")
+
+	flag.Parse()
+
 	mux := http.NewServeMux()
 
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
@@ -16,8 +21,8 @@ func main() {
 	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
 
-	log.Println("Strarting the server on 3000 port")
+	log.Printf("Strarting server on %v\n", *addr)
 
-	err := http.ListenAndServe("localhost:3000", mux)
+	err := http.ListenAndServe(*addr, mux)
 	log.Fatal(err)
 }
