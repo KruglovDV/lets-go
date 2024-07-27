@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"lets-go/internal/models"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +14,7 @@ import (
 type Application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -33,6 +35,7 @@ func main() {
 	app := &Application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	srv := http.Server{
