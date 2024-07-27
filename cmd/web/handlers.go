@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"lets-go/internal/models"
 	"net/http"
 	"strconv"
@@ -21,26 +20,7 @@ func (app *Application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	templateFiles := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
-	}
-
-	ts, err := template.ParseFiles(templateFiles...)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		app.serverError(w, err)
-		return
-	}
-
-	data := &templateData{Snippets: snippets}
-
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.errorLog.Println(err.Error())
-		app.serverError(w, err)
-	}
+	app.render(w, http.StatusOK, "home.tmpl", &templateData{Snippets: snippets})
 }
 
 func (app *Application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -60,23 +40,7 @@ func (app *Application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/view.tmpl",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	data := &templateData{Snippet: snippet}
-
-	if err = ts.ExecuteTemplate(w, "base", data); err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, http.StatusOK, "view.tmpl", &templateData{Snippet: snippet})
 }
 
 func (app *Application) snippetCreate(w http.ResponseWriter, r *http.Request) {
