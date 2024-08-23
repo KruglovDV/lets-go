@@ -1,5 +1,5 @@
 db-up:
-	docker-compose up
+	docker compose up
 
 
 dev:
